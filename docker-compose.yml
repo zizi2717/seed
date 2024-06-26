@@ -1,0 +1,46 @@
+version: '3'
+
+x-logging: &default-logging
+  options:
+      max-size: '10m'
+      max-file: '3'
+
+services:
+    postgres:
+        image: postgres:latest
+        profiles: ['infra']
+        container_name: ${POSTGRES_DB_HOST}
+        logging: *default-logging
+        environment:
+            POSTGRES_USER: ${POSTGRES_DB_USERNAME}
+            POSTGRES_PASSWORD: ${POSTGRES_DB_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB_DATABASE}
+        networks:
+            - default
+
+    redis:
+        image: redis:latest
+        profiles: ['infra']
+        container_name: ${REDIS_HOST}
+        logging: *default-logging
+        networks:
+            - default
+
+    service:
+        image: $PROJECT_NAME
+        build: .
+        profiles: ['service']
+        container_name: $PROJECT_NAME
+        logging: *default-logging
+        environment:
+            - NODE_ENV=production
+        env_file: .env
+        # volumes:
+        #     - ./logs:/app/logs
+        networks:
+            - default
+
+networks:
+    default:
+        external: true
+        name: ${PROJECT_NAME}

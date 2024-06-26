@@ -13,7 +13,7 @@
         "HOST_PATH": "${localWorkspaceFolder}",
         "NODE_ENV": "development"
     },
-    "initializeCommand": "docker network create ${containerWorkspaceFolderBasename} || true",
+    // "initializeCommand": "docker network create ${containerWorkspaceFolderBasename} || true",
     "runArgs": [
         "--network",
         "${containerWorkspaceFolderBasename}",

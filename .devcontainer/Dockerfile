@@ -1,29 +1,22 @@
-FROM node:lts-bullseye
+FROM node:lts-alpine
 
-RUN apt-get update
+RUN apk update
 
-# 개발 도구 설치
-RUN apt-get install -y git curl jq tree vim
+# Development Tools
+RUN apk add -f git curl jq tree vim asciinema postgresql
 
-# Bash 설치
-RUN apt-get install -y bash bash-completion
+# Bash Install
+RUN apk add -f bash bash-doc bash-completion
 
-# 기본 셸을 bash로 설정
+## default shell ash -> bash
+RUN sed -i "s|/bin/ash|/bin/bash|g" /etc/passwd
+
+## color prompt
 RUN echo 'PS1="\[\033[32m\]\w\[\033[00m\] "' >> ~/.bashrc
 RUN echo "alias ls='ls --color=auto'" >> ~/.bashrc
 RUN echo "alias l='ls --color=auto -lA'" >> ~/.bashrc
 
-# Docker 설치
-RUN apt-get update
-RUN apt-get install -y ca-certificates curl gnupg
-RUN install -m 0755 -d /etc/apt/keyrings
-RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-RUN chmod a+r /etc/apt/keyrings/docker.gpg
-RUN echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  tee /etc/apt/sources.list.d/docker.list > /dev/null
-RUN apt-get update
-RUN apt-get install -y docker-ce-cli
+# docker
+RUN apk add -f docker-cli docker-cli-compose
 
 EXPOSE 3000
