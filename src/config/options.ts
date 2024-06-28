@@ -9,7 +9,6 @@ export function isDevelopment() {
 }
 
 export const psqlOptions = {
-    type: 'postgres',
     host: getString('POSTGRES_DB_HOST'),
     port: getNumber('POSTGRES_DB_PORT'),
     username: getString('POSTGRES_DB_USERNAME'),

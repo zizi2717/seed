@@ -1,20 +1,20 @@
 #!/bin/sh
 set -e
 
-docker network create vscode || true
+docker network create seed || true
 
 docker rm -f seed-redis
 
 docker run --restart=always -d --log-opt max-size=10m --log-opt max-file=3 \
     --name seed-redis \
-    --network vscode \
+    --network seed \
     redis:7.0 redis-server
 
 docker rm -f seed-postgres
 
 docker run -d --restart=always --log-opt max-size=10m --log-opt max-file=3 \
     --name seed-postgres \
-    --network vscode \
+    --network seed \
     -e POSTGRES_DB=seed \
     -e POSTGRES_USER=seed \
     -e POSTGRES_PASSWORD=seed \

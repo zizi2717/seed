@@ -16,7 +16,7 @@ const psqlModuleConfig = (): PostgresConnectionOptions => {
         synchronize
     }
 
-    return options as PostgresConnectionOptions
+    return options
 }
 
 @Module({
