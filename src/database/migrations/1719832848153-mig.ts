@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
 
-export class Mig1700199870000 implements MigrationInterface {
-    name = 'Mig1700199870000'
+export class Mig1719832848153 implements MigrationInterface {
+    name = 'Mig1719832848153'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`SET search_path TO main, public`)

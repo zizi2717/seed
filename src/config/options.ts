@@ -1,4 +1,7 @@
+import * as dotenv from 'dotenv'
 import { getNumber, getString } from './utils'
+
+dotenv.config({ path: '.env' })
 
 export function isProduction() {
     return process.env.NODE_ENV === 'production'

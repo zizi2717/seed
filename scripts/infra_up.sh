@@ -19,6 +19,7 @@ docker run -d --restart=always --log-opt max-size=10m --log-opt max-file=3 \
     -e POSTGRES_USER=seed \
     -e POSTGRES_PASSWORD=seed \
     -e POSTGRES_INITDB_ARGS=--encoding=UTF-8 \
+    -p 5432:5432 \
     postgres:13.11
 
 while ! docker exec seed-postgres pg_isready -h seed-postgres -U seed; do
