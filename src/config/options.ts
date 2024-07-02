@@ -20,3 +20,8 @@ export const psqlOptions = {
     schema: getString('POSTGRES_DB_SCHEMA'),
     poolSize: getNumber('POSTGRES_DB_POOL_SIZE')
 }
+
+export const redisOptions = {
+    host: getString('REDIS_HOST'),
+    port: getNumber('REDIS_PORT')
+}
