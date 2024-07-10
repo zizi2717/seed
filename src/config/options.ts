@@ -11,6 +11,14 @@ export function isDevelopment() {
     return process.env.NODE_ENV === 'development'
 }
 
+export const logOptions = {
+    logDirectory: getString('LOG_DIRECTORY'),
+    daysToKeepLogs: getString('LOG_DAYS_TO_KEEP'),
+    fileLogLevel: getString('LOG_FILE_LEVEL'),
+    consoleLogLevel: getString('LOG_CONSOLE_LEVEL'),
+    logAuthKey: getString('LOG_AUTH_KEY')
+}
+
 export const psqlOptions = {
     host: getString('POSTGRES_DB_HOST'),
     port: getNumber('POSTGRES_DB_PORT'),
