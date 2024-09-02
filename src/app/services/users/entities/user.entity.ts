@@ -1,9 +1,9 @@
 import { Exclude } from 'class-transformer'
-import { TypeormEntity } from 'src/common'
+import { AggregateRoot } from 'src/common'
 import { Column, Entity } from 'typeorm'
 
 @Entity()
-export class User extends TypeormEntity {
+export class User extends AggregateRoot {
     @Column({ unique: true })
     email: string
 
