@@ -1,5 +1,5 @@
-import { psqlOptions } from 'src/config'
-import { User } from 'src/services/users/entities/user.entity'
+import { User } from 'app/services'
+import { psqlOptions } from 'config'
 import { DataSource } from 'typeorm'
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions'
 import { Mig1719832848153 } from './migrations/1719832848153-mig'
