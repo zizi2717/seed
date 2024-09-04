@@ -33,3 +33,10 @@ export const redisOptions = {
     host: getString('REDIS_HOST'),
     port: getNumber('REDIS_PORT')
 }
+
+export const authOptions = {
+    accessSecret: getString('AUTH_ACCESS_SECRET'),
+    accessTokenExpiration: getString('AUTH_ACCESS_TOKEN_EXPIRATION'),
+    refreshSecret: getString('AUTH_REFRESH_SECRET'),
+    refreshTokenExpiration: getString('AUTH_REFRESH_TOKEN_EXPIRATION')
+}
