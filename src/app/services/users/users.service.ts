@@ -55,11 +55,35 @@ export class UsersService {
         await this.usersRepository.remove(user)
     }
 
+    //
+
     private async getUserEntity(userId: string) {
         const user = await this.usersRepository.findById(userId)
 
         Assert.defined(user, `User with ID ${userId} not found`)
 
         return user as User
+    }
+
+    async findByEmail(email: string): Promise<UserDto | null> {
+        const user = await this.usersRepository.findByEmail(email)
+
+        if (user) {
+            return new UserDto(user)
+        }
+
+        return null
+    }
+
+    async isCorrectPassword(userId: string, password: string) {
+        const user = await this.getUserEntity(userId)
+
+        return Password.validate(password, user.password)
+    }
+
+    async userExists(userId: string) {
+        const exists = await this.usersRepository.exist(userId)
+
+        return exists
     }
 }

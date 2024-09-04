@@ -28,4 +28,8 @@ export class UsersRepository extends TypeormRepository<User> {
 
         return { items, total, take, skip }
     }
+
+    async findByEmail(email: string): Promise<User | null> {
+        return this.typeorm.findOneBy({ email })
+    }
 }
