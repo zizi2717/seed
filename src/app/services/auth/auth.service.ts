@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { AdminDto, AdminsService } from 'app/services/admins'
 import { UserDto, UsersService } from 'app/services/users'
 import { CacheService, convertTimeToSeconds, generateUUID } from 'common'
 import { authOptions } from 'config'
@@ -11,6 +12,7 @@ const REFRESH_TOKEN_PREFIX = 'refreshToken:'
 export class AuthService {
     constructor(
         private readonly usersService: UsersService,
+        private readonly adminsService: AdminsService,
         private readonly jwtService: JwtService,
         private readonly cache: CacheService
     ) {}
@@ -106,5 +108,22 @@ export class AuthService {
 
     private async getStoredRefreshToken(userId: string): Promise<string | undefined> {
         return this.cache.get(`${REFRESH_TOKEN_PREFIX}${userId}`)
+    }
+
+    /*
+     * Admin
+     */
+    async getAdminWithPassword(email: string, password: string): Promise<AdminDto | null> {
+        const admin = await this.adminsService.findByEmail(email)
+
+        if (admin) {
+            const isCorrectPassword = await this.adminsService.isCorrectPassword(admin.id, password)
+
+            if (isCorrectPassword) {
+                return admin
+            }
+        }
+
+        return null
     }
 }

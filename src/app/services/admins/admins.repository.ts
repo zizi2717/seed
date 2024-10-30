@@ -9,4 +9,8 @@ export class AdminsRepository extends TypeormRepository<Admin> {
     constructor(@InjectRepository(Admin) typeorm: Repository<Admin>) {
         super(typeorm)
     }
+
+    async findByEmail(email: string): Promise<Admin | null> {
+        return this.typeorm.findOneBy({ email })
+    }
 }
