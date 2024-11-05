@@ -40,3 +40,8 @@ export const authOptions = {
     refreshSecret: getString('AUTH_REFRESH_SECRET'),
     refreshTokenExpiration: getString('AUTH_REFRESH_TOKEN_EXPIRATION')
 }
+
+export const emailOptions = {
+    accessKey: getString('EMAIL_ACCESS_KEY'),
+    secretAccessKey: getString('EMAIL_SECRET_ACCESS_KEY')
+}
