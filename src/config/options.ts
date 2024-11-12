@@ -45,3 +45,11 @@ export const emailOptions = {
     accessKey: getString('EMAIL_ACCESS_KEY'),
     secretAccessKey: getString('EMAIL_SECRET_ACCESS_KEY')
 }
+
+export const s3Options = {
+    accessKeyId: getString('S3_ACCESS_KEY_ID'),
+    secretAccessKey: getString('S3_SECRET_ACCESS_KEY'),
+    endpoint: getString('S3_ENDPOINT'),
+    region: getString('S3_REGION'),
+    bucket: getString('S3_ACCESS_KEY_ID')
+}
