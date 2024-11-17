@@ -3,14 +3,14 @@ import { AdminDto } from 'app/services/admins'
 import { AuthService } from 'app/services/auth'
 import { UserDto } from 'app/services/users'
 import { Assert } from 'common'
-import { AdminLocalAuthGuard, LocalAuthGuard } from './guards'
+import { AdminLocalAuthGuard, LocalAuthGuard } from './authentications'
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
-    @UseGuards(LocalAuthGuard)
     @Post('login')
+    @UseGuards(LocalAuthGuard)
     async login(@Req() req: { user: UserDto }) {
         Assert.defined(req.user, 'login failed. req.user is null.')
 
