@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { AdminDto, AdminsService } from 'app/services/admins'
 import { UserDto, UsersService } from 'app/services/users'
 import { CacheService, convertTimeToSeconds, generateUUID } from 'common'
 import { authOptions } from 'config'
-import { AccessTokenPayload, AdminTokenPayload, AuthTokenPair } from './interfaces'
+import { AccessTokenPayload, AuthTokenPair } from './interfaces'
 
 const REFRESH_TOKEN_PREFIX = 'refreshToken:'
 
@@ -12,16 +11,11 @@ const REFRESH_TOKEN_PREFIX = 'refreshToken:'
 export class AuthService {
     constructor(
         private readonly usersService: UsersService,
-        private readonly adminsService: AdminsService,
         private readonly jwtService: JwtService,
         private readonly cache: CacheService
     ) {}
 
-    private async createToken(
-        payload: AccessTokenPayload | AdminTokenPayload,
-        secret: string,
-        expiresIn: string
-    ): Promise<string> {
+    private async createToken(payload: AccessTokenPayload, secret: string, expiresIn: string): Promise<string> {
         const token = await this.jwtService.signAsync(
             { ...payload, jti: generateUUID() },
             { secret, expiresIn }
@@ -34,10 +28,7 @@ export class AuthService {
         const tokenPayload = await this.getRefreshTokenPayload(refreshToken)
 
         if (tokenPayload) {
-            const tokenPair =
-                'adminId' in tokenPayload
-                    ? await this.getAdminTokenPair(refreshToken)
-                    : await this.getAuthTokenPair(refreshToken)
+            const tokenPair = await this.getAuthTokenPair(refreshToken)
 
             return tokenPair
         }
@@ -45,7 +36,7 @@ export class AuthService {
         return null
     }
 
-    private async getRefreshTokenPayload(token: string): Promise<AccessTokenPayload | AdminTokenPayload | undefined> {
+    private async getRefreshTokenPayload(token: string): Promise<AccessTokenPayload> {
         try {
             const secret = authOptions.refreshSecret
 
@@ -53,10 +44,8 @@ export class AuthService {
 
             return payload
         } catch (error) {
-            // TODO: Add exception
+            throw new UnauthorizedException(error.message)
         }
-
-        return undefined
     }
 
     /*
@@ -122,61 +111,6 @@ export class AuthService {
 
             if (storedRefreshToken === refreshToken) {
                 return this.generateAuthTokenPair(tokenPayload.userId, tokenPayload.email)
-            }
-        }
-
-        return null
-    }
-
-    /*
-     * Admin
-     */
-    async getAdminWithPassword(email: string, password: string): Promise<AdminDto | null> {
-        const admin = await this.adminsService.findByEmail(email)
-
-        if (admin) {
-            const isCorrectPassword = await this.adminsService.isCorrectPassword(admin.id, password)
-
-            if (isCorrectPassword) {
-                return admin
-            }
-        }
-
-        return null
-    }
-
-    async adminLogin(admin: AdminDto) {
-        return this.generateAdminTokenPair(admin.id, admin.email)
-    }
-
-    private async generateAdminTokenPair(adminId: string, email: string): Promise<AuthTokenPair> {
-        const commonPayload = { adminId, email }
-
-        const accessToken = await this.createToken(
-            commonPayload,
-            authOptions.accessSecret,
-            authOptions.accessTokenExpiration
-        )
-
-        const refreshToken = await this.createToken(
-            commonPayload,
-            authOptions.refreshSecret,
-            authOptions.refreshTokenExpiration
-        )
-
-        await this.storeRefreshToken(adminId, refreshToken)
-
-        return { accessToken, refreshToken }
-    }
-
-    async getAdminTokenPair(refreshToken: string) {
-        const tokenPayload = (await this.getRefreshTokenPayload(refreshToken)) as AdminTokenPayload
-
-        if (tokenPayload) {
-            const storedRefreshToken = await this.getStoredRefreshToken(tokenPayload.adminId)
-
-            if (storedRefreshToken === refreshToken) {
-                return this.generateAdminTokenPair(tokenPayload.adminId, tokenPayload.email)
             }
         }
 
