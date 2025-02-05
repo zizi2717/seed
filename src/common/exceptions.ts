@@ -1,27 +1,18 @@
-export class FatalException extends Error {
+export class Exception extends Error {
     constructor(message?: string) {
         super(message)
-        this.name = 'FatalException'
+        this.name = this.constructor.name
     }
 }
 
-export class LogicException extends FatalException {
-    constructor(message?: string) {
-        super(message)
-        this.name = 'LogicException'
-    }
-}
+/**
+ * An exception that cannot or should not occur.
+ * The entire system should be immediately stopped, and the cause of the problem should be investigated.
+ */
+export class FatalException extends Exception {}
 
-export class ConfigException extends Error {
-    constructor(message?: string) {
-        super(message)
-        this.name = 'ConfigException'
-    }
-}
-
-export class TransactionException extends Error {
-    constructor(message: string) {
-        super(message)
-        this.name = 'TransactionException'
-    }
-}
+/**
+ * An exception caused by an incorrect state or behavior in the code logic.
+ * This is usually caused by a programmer's mistake.
+ */
+export class LogicException extends FatalException {}

@@ -1,7 +1,7 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Inject, Injectable, OnModuleDestroy } from '@nestjs/common'
 import { Cache } from 'cache-manager'
-import { ConfigException } from 'common'
+import { Exception } from 'common'
 
 @Injectable()
 export class CacheService implements OnModuleDestroy {
@@ -16,9 +16,9 @@ export class CacheService implements OnModuleDestroy {
         const expireMiliseconds = expireSeconds ? expireSeconds * 1000 : 0
 
         if (0 < expireMiliseconds && expireMiliseconds < 1000) {
-            throw new ConfigException('expireSeconds must be greater than 1000ms')
+            throw new Exception('expireSeconds must be greater than 1000ms')
         } else if (expireMiliseconds < 0) {
-            throw new ConfigException('expireSeconds must be greater than 0')
+            throw new Exception('expireSeconds must be greater than 0')
         }
 
         await this.cacheManager.set(key, value, expireMiliseconds)
