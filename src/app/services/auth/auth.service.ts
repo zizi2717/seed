@@ -48,9 +48,6 @@ export class AuthService {
         }
     }
 
-    /*
-     * User
-     */
     async getUserWithPassword(email: string, password: string): Promise<UserDto | null> {
         const user = await this.usersService.findByEmail(email)
 
