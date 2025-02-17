@@ -1,8 +1,8 @@
 import { Assert, PaginationOptions } from 'common'
 import { DeepPartial, FindOptionsWhere, In, Repository } from 'typeorm'
-import { AggregateRoot } from './typeorm.entity'
+import { TypeormEntity } from './typeorm.entity'
 
-export abstract class TypeormRepository<T extends AggregateRoot> {
+export abstract class TypeormRepository<T extends TypeormEntity> {
     constructor(protected typeorm: Repository<T>) {}
 
     createCandidate(entityData: DeepPartial<T>): T {
