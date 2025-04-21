@@ -20,10 +20,24 @@ export interface HttpLogInfo {
     runningTime: string
 }
 
+const defaultHttpLogInfo: HttpLogInfo = {
+    method: 'UNKNOWN',
+    statusCode: '000',
+    url: '-',
+    body: null,
+    runningTime: '0ms'
+}
+
 export interface OrmLogInfo {
     query: string
     parameters: string
     runningTime: string
+}
+
+const defaultOrmLogInfo: OrmLogInfo = {
+    query: 'UNKNOWN_QUERY',
+    parameters: '[]',
+    runningTime: '0ms'
 }
 
 export async function initializeLogger(config: LoggerConfiguration) {
@@ -86,9 +100,9 @@ const consoleLogFormat = winstonFormat.combine(
         const formattedTimestamp = chalk.gray(timestamp)
 
         if (info[0] === 'HTTP') {
-            return formatHttpLog(formattedMessage, formattedLevel, formattedTimestamp, etc[1] ?? {})
+            return formatHttpLog(formattedMessage, formattedLevel, formattedTimestamp, { ...defaultHttpLogInfo, ...(etc[1] || {}) })
         } else if (info[0] === 'ORM') {
-            return formatOrmLog(formattedMessage, formattedLevel, formattedTimestamp, etc[1] ?? {})
+            return formatOrmLog(formattedMessage, formattedLevel, formattedTimestamp, { ...defaultOrmLogInfo, ...(etc.meta || {}) })
         } else {
             return formatGenericLog(formattedMessage, formattedLevel, formattedTimestamp, etc ?? {})
         }
