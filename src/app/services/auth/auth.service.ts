@@ -113,4 +113,15 @@ export class AuthService {
 
         return null
     }
+
+    // WebSocket
+    verifyToken(token: string): { userId: string } | null {
+        try {
+            const decoded = jwt.verify(token, this.secret)
+        
+            return decoded as { userId: string }
+        } catch (err) {
+            return null
+        }
+    }
 }
